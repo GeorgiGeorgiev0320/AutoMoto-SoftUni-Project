@@ -25,9 +25,11 @@ namespace CarSelling.Data.Models
 
         [Required][MaxLength(DescriptionMaxLength)] public string Description { get; set; } = null!;
 
-        [Required] public int HorsePower { get; set; }
+        [Required][MaxLength(CarPowerMax)] public int HorsePower { get; set; }
 
-        [Required] public int Mileage { get; set; }
+        [Required][MaxLength(CarMileageMax)] public int Mileage { get; set; }
+
+         public DateTime Year { get; set; } 
 
         [Required]
         [MaxLength(ImageUrlMaxLength)]

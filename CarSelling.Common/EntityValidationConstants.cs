@@ -25,6 +25,13 @@ namespace CarSelling.Common
             public const int ImageUrlMaxLength = 2048;
 
             public const string CarPriceMin = "0";
+            public const string CarPriceMax = "3000000";
+
+            public const int CarMileageMin = 0;
+            public const int CarMileageMax = 2000000;
+
+            public const int CarPowerMin = 1;
+            public const int CarPowerMax = 5000;
         }
 
         public static class Make

@@ -11,5 +11,10 @@ namespace CarSelling.Web.Controllers
         {
             return View();
         }
+
+        public async Task<IActionResult> Add()
+        {
+            return View();
+        }
     }
 }
