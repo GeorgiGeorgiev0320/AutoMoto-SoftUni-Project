@@ -3,6 +3,7 @@ using CarSelling.Data.Models;
 using CarSelling.Services.Data;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.Infrastructure.Extensions;
+using CarSelling.Web.Infrastructure.ModelBinders;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarSelling.Web
@@ -35,7 +36,11 @@ namespace CarSelling.Web
 
             builder.Services.AddApplicationServices(typeof(ICarService));
 
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews()
+                .AddMvcOptions(options =>
+                {
+                    options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                });
 
             var app = builder.Build();
 
