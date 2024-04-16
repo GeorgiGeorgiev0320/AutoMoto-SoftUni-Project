@@ -31,5 +31,10 @@ namespace CarSelling.Services.Data
         {
             return await dbContext.Categories.AnyAsync(h => h.Id == id);
         }
+
+        public async Task<ICollection<string>> AllCategoryNamesAsync()
+        {
+            return await dbContext.Categories.Select(c => c.Name).ToArrayAsync();
+        }
     }
 }

@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 using CarSelling.Data;
 using CarSelling.Data.Models;
 using CarSelling.Services.Data.Interfaces;
+using CarSelling.Services.Data.Models.Car;
 using CarSelling.Web.ViewModels.Car;
+using CarSelling.Web.ViewModels.Car.Enums;
 using CarSelling.Web.ViewModels.Home;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,6 +21,67 @@ namespace CarSelling.Services.Data
         public CarService(CarSellingDbContext dbContext)
         {
             this.dbContext = dbContext;
+        }
+
+        public async Task<AllCarsFilteredServiceModel> AllCarsFiltered(CarsAllQueryModel queryModel)
+        {
+            IQueryable<Car> carsQuery = dbContext.Cars.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(queryModel.Category) && !string.IsNullOrWhiteSpace(queryModel.Make))
+            {
+                carsQuery = carsQuery.Where(h => h.Category.Name == queryModel.Category && h.Make.MakeName == queryModel.Make);
+            }
+            if (!string.IsNullOrWhiteSpace(queryModel.Category))
+            {
+                carsQuery = carsQuery.Where(h => h.Category.Name == queryModel.Category);
+            }
+            if (!string.IsNullOrWhiteSpace(queryModel.Make))
+            {
+                carsQuery = carsQuery.Where(h => h.Make.MakeName == queryModel.Make);
+            }
+
+            if (!string.IsNullOrWhiteSpace(queryModel.Search))
+            {
+                string wildCard = $"%{queryModel.Search.ToLower()}%";
+
+                carsQuery = carsQuery.Where(c=> EF.Functions.Like(c.Model, wildCard)||
+                                                EF.Functions.Like(c.Description, wildCard));
+
+            }
+
+            carsQuery = queryModel.Sorting switch
+            {
+                CarSorting.PriceAscending => carsQuery.OrderBy(c => c.Price),
+                CarSorting.PriceDescending => carsQuery.OrderByDescending(c => c.Price),
+                CarSorting.Newest => carsQuery.OrderByDescending(c => c.Year),
+                CarSorting.Oldest => carsQuery.OrderBy(c => c.Year),
+                CarSorting.LastAdded => carsQuery.OrderByDescending(c => c.CreatedOn),
+                CarSorting.FirstAdded => carsQuery.OrderBy(c => c.CreatedOn),
+                CarSorting.BoughtCars => carsQuery.OrderBy(c => c.BuyerId != null).ThenByDescending(c=>c.CreatedOn)
+            };
+
+            ICollection<CarAllViewModel> allCars = await carsQuery
+                .Skip((queryModel.CurrentPage - 1) * queryModel.CarPerPage)
+                .Take(queryModel.CarPerPage)
+                .Select(c => new CarAllViewModel()
+                {
+                    Id = c.Id.ToString(),
+                    Mileage = c.Mileage,
+                    Date = c.Year.ToString("Y"),
+                    MakeName = c.Make.MakeName,
+                    Model = c.Model,
+                    Price = c.Price,
+                    IsBought = c.BuyerId.HasValue,
+                    ImageUrl = c.ImageUrl
+                }).ToArrayAsync();
+
+            int totalCars = carsQuery.Count();
+
+            return new AllCarsFilteredServiceModel()
+            {
+                Cars = allCars,
+                TotalCarsCount = totalCars
+            };
         }
 
         public async Task CreateCar(CarFormModel model, string sellerId)

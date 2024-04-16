@@ -20,6 +20,11 @@ namespace CarSelling.Services.Data
             this.dbContext = dbContext;
         }
 
+        public async Task<ICollection<string>> AllMakeNamesAsync()
+        {
+            return await dbContext.Makes.Select(m => m.MakeName).ToArrayAsync();
+        }
+
         public async Task<ICollection<MakeCarFormModel>> GetMakesAsync()
         {
             return await dbContext.Makes.Select(m => new MakeCarFormModel()

@@ -12,5 +12,7 @@ namespace CarSelling.Services.Data.Interfaces
         Task<ICollection<MakeCarFormModel>> GetMakesAsync();
 
         Task<bool> IsValidMake(int id);
+
+        Task<ICollection<string>> AllMakeNamesAsync();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using CarSelling.Services.Data.Interfaces;
+using CarSelling.Services.Data.Models.Car;
 using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.ViewModels.Car;
 using Microsoft.AspNetCore.Authorization;
@@ -25,9 +26,17 @@ namespace CarSelling.Web.Controllers
 
 
         [AllowAnonymous]
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery]CarsAllQueryModel queryModel)
         {
-            return Ok();
+            AllCarsFilteredServiceModel serviceModel = await carService.AllCarsFiltered(queryModel);
+
+
+            queryModel.AllCars = serviceModel.Cars;
+            queryModel.TotalCars = serviceModel.TotalCarsCount;
+            queryModel.Categories = await categoryService.AllCategoryNamesAsync();
+            queryModel.Makes = await makeService.AllMakeNamesAsync();
+
+            return View(queryModel);
         }
 
 

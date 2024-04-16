@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CarSelling.Services.Data.Models.Car;
 using CarSelling.Web.ViewModels.Car;
 using CarSelling.Web.ViewModels.Home;
 
@@ -13,5 +14,7 @@ namespace CarSelling.Services.Data.Interfaces
         Task<ICollection<IndexViewModel>> LastFewCars();
 
         Task CreateCar(CarFormModel model, string sellerId);
+
+        Task<AllCarsFilteredServiceModel> AllCarsFiltered(CarsAllQueryModel queryModel);
     }
 }
