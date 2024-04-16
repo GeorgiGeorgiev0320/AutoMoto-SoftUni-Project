@@ -98,7 +98,7 @@ namespace CarSelling.Services.Data
                 SellerId = Guid.Parse(sellerId),
                 Year = model.Year,
                 Price = model.Price,
-                CreatedOn = DateTime.UtcNow
+                CreatedOn = DateTime.Now
             };
 
             await dbContext.Cars.AddAsync(car);
