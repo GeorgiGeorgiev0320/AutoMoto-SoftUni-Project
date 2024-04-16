@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Car\Add.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="3leh1i3g.de1~" />
   </ItemGroup>
 
@@ -21,6 +17,7 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.9" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="6.0.16" />
   </ItemGroup>
 
   <ItemGroup>
@@ -30,18 +27,6 @@
     <ProjectReference Include="..\CarSelling.Services.Data\CarSelling.Services.Data.csproj" />
     <ProjectReference Include="..\CarSelling.Web.Infrastructure\CarSelling.Web.Infrastructure.csproj" />
     <ProjectReference Include="..\CarSelling.Web.ViewModels\CarSelling.Web.ViewModels.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <UpToDateCheckInput Remove="Views\Car\Add.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Views\Car\Add.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Car\Add.cshtml" />
   </ItemGroup>
 
 </Project>

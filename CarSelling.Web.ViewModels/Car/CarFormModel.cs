@@ -50,6 +50,8 @@ namespace CarSelling.Web.ViewModels.Car
         public decimal Price { get; set; }
 
         [Required]
-        public DateTime Year { get; set; }
+        [Display(Name = "Date of production")]
+        [DisplayFormat(DataFormatString = "{0:yyyy-MM}", ApplyFormatInEditMode = true)]
+        public DateTime Year { get; set; } = DateTime.UtcNow;
     }
 }
