@@ -10,5 +10,7 @@ namespace CarSelling.Services.Data.Interfaces
     public interface ICategoryService
     {
         Task<ICollection<CategoryCarFormModel>> GetCategoriesAsync();
+
+        Task<bool> IsValidCategory(int id);
     }
 }

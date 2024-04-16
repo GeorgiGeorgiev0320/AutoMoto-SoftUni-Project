@@ -26,5 +26,10 @@ namespace CarSelling.Services.Data
                 Name = h.Name
             }).ToArrayAsync();
         }
+
+        public async Task<bool> IsValidCategory(int id)
+        {
+            return await dbContext.Categories.AnyAsync(h => h.Id == id);
+        }
     }
 }

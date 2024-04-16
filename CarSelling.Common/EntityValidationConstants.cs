@@ -27,11 +27,11 @@ namespace CarSelling.Common
             public const string CarPriceMin = "0";
             public const string CarPriceMax = "3000000";
 
-            public const int CarMileageMin = 0;
-            public const int CarMileageMax = 2000000;
+            public const string CarMileageMin = "0";
+            public const string CarMileageMax = "2000000";
 
-            public const int CarPowerMin = 1;
-            public const int CarPowerMax = 5000;
+            public const string CarPowerMin = "1";
+            public const string CarPowerMax = "5000";
         }
 
         public static class Make

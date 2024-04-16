@@ -13,19 +13,21 @@ namespace CarSelling.Web.Controllers
         private readonly ICategoryService categoryService;
         private readonly IMakeService makeService;
         private readonly ISellerService sellerService;
+        private readonly ICarService carService;
 
-        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService)
+        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService, ICarService carService)
         {
             this.categoryService = categoryService;
             this.makeService = makeService;
             this.sellerService = sellerService;
+            this.carService = carService;
         }
 
 
         [AllowAnonymous]
         public async Task<IActionResult> All()
         {
-            return View();
+            return Ok();
         }
 
 
@@ -48,6 +50,55 @@ namespace CarSelling.Web.Controllers
             };
 
             return View(car);
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> Add(CarFormModel modelToModel)
+        {
+            bool isSeller = await sellerService.IsSellerEnabled(this.User.GetId()!);
+
+            if (!isSeller)
+            {
+                TempData[ErrorMessage] = "You have to become seller to add cars!";
+
+                RedirectToAction("Become", "Seller");
+            }
+
+            bool validCategory = await categoryService.IsValidCategory(modelToModel.CategoryId);
+            bool validMake = await makeService.IsValidMake(modelToModel.MakeId);
+
+            if (!validMake)
+            {
+                ModelState.AddModelError(nameof(modelToModel.MakeId), "The selection is not valid!");
+            }
+            if (!validCategory)
+            {
+                ModelState.AddModelError(nameof(modelToModel.CategoryId), "The selection is not valid!");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                modelToModel.Categories = await categoryService.GetCategoriesAsync();
+                modelToModel.Makes = await makeService.GetMakesAsync();
+
+                return View(modelToModel);
+            }
+
+            try
+            {
+                string? sellerId = await sellerService.GetSellerIdByUsesId(this.User.GetId()!);
+                await carService.CreateCar(modelToModel, sellerId!);
+
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+
+            return RedirectToAction("All", "Car");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices.ComTypes;
 using System.Text;
 using System.Threading.Tasks;
 using CarSelling.Data;
@@ -26,6 +27,11 @@ namespace CarSelling.Services.Data
                 Id = m.Id,
                 Make = m.MakeName
             }).ToArrayAsync();
+        }
+
+        public async Task<bool> IsValidMake(int id)
+        {
+            return await dbContext.Makes.AnyAsync(h => h.Id == id);
         }
     }
 }

@@ -26,25 +26,25 @@ namespace CarSelling.Web.ViewModels.Car
         public ICollection<CategoryCarFormModel> Categories { get; set; } = new List<CategoryCarFormModel>();
 
         [Required]
-        [StringLength(ModelMaxLength, MinimumLength = ModelMinLength, ErrorMessage = "The text you are providing is out of parameters!")]
+        [StringLength(ModelMaxLength, MinimumLength = ModelMinLength)]
         public string Model { get; set; } = null!;
 
-        [Required]
-        [StringLength(CarMileageMax, MinimumLength = CarMileageMin, ErrorMessage = "Your mileage is below 0 or over 2 000 000!")]
+
+        [Range(typeof(int), CarMileageMin, CarMileageMax)]
         public int Mileage { get; set; }
 
-        [Required]
-        [StringLength(CarPowerMax, MinimumLength = CarPowerMin, ErrorMessage = "Power should be between 1 and 5000 hp!")]
+
+        [Range(typeof(int), CarPowerMin, CarPowerMax)]
         public int HorsePower { get; set; }
 
         [Required]
-        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength, ErrorMessage = "Description is out of the parameters!")]
+        [StringLength(DescriptionMaxLength, MinimumLength = DescriptionMinLength)]
         public string Description { get; set; } = null!;
 
         [Required]
         [StringLength(ImageUrlMaxLength, MinimumLength = 10, ErrorMessage = "Error, your image url is not valid!")]
         [Display(Name = "Image Link")]
-        public string ImageUrl = null!;
+        public string ImageUrl { get; set; }= null!;
 
         [Range(typeof(decimal), CarPriceMin, CarPriceMax)]
         public decimal Price { get; set; }

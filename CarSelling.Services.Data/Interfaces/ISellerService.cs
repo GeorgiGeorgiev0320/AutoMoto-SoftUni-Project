@@ -14,5 +14,7 @@ namespace CarSelling.Services.Data.Interfaces
         Task<bool> SellerNumberAlreadyInUseAsync(string phoneNumber);
 
         Task Create(string userId, SellerFormModel model);
+
+        Task<string?> GetSellerIdByUsesId(string userId);
     }
 }

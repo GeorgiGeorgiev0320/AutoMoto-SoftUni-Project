@@ -10,5 +10,7 @@ namespace CarSelling.Services.Data.Interfaces
     public interface IMakeService
     {
         Task<ICollection<MakeCarFormModel>> GetMakesAsync();
+
+        Task<bool> IsValidMake(int id);
     }
 }
