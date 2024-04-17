@@ -121,5 +121,39 @@ namespace CarSelling.Services.Data
                 }).ToArrayAsync();
             return lastCars;
         }
+
+        public async Task<ICollection<CarAllViewModel>> SellerCarsByIdAsync(string id)
+        {
+            var sellerCars = await dbContext.Cars.Where(c => c.BuyerId.ToString() == id).Select(x => new CarAllViewModel
+            {
+                Id = x.Id.ToString(),
+                MakeName = x.Make.MakeName,
+                Model = x.Model,
+                Date = x.Year.ToString("yyyy-MM-dd"),
+                ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                Mileage = x.Mileage,
+                IsBought = x.IsBought
+            }).ToArrayAsync();
+
+            return sellerCars;
+        }
+
+        public async Task<ICollection<CarAllViewModel>> UserBoughtCarsByIdAsync(string id)
+        {
+            var userCars = await dbContext.Cars.Where(c => c.BuyerId.HasValue && c.BuyerId.ToString() == id).Select(x => new CarAllViewModel
+            {
+                Id = x.Id.ToString(),
+                MakeName = x.Make.MakeName,
+                Model = x.Model,
+                Date = x.Year.ToString("yyyy-MM-dd"),
+                ImageUrl = x.ImageUrl,
+                Price = x.Price,
+                Mileage = x.Mileage,
+                IsBought = x.IsBought
+            }).ToArrayAsync();
+
+            return userCars;
+        }
     }
 }

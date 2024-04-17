@@ -37,6 +37,8 @@ namespace CarSelling.Data.Models
 
         public bool IsActive { get; set; }
 
+        public bool IsBought { get; set; }
+
         public decimal Price { get; set; }
 
         [Required]

@@ -4,6 +4,7 @@ using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.ViewModels.Car;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NuGet.Packaging;
 using static CarSelling.Common.NotificationMessagesConstants;
 
 namespace CarSelling.Web.Controllers
@@ -108,6 +109,27 @@ namespace CarSelling.Web.Controllers
             }
 
             return RedirectToAction("All", "Car");
+        }
+
+        public async Task<IActionResult> Mine()
+        {
+            ICollection<CarAllViewModel> allCars = new List<CarAllViewModel>();
+            string userId = this.User.GetId()!;
+
+            bool isUserSeller = await sellerService.IsSellerEnabled(userId);
+
+            if (isUserSeller)
+            {
+                string? sellerId = await sellerService.GetSellerIdByUsesId(userId);
+
+                allCars.AddRange(await carService.SellerCarsByIdAsync(sellerId!));
+            }
+            else
+            {
+                allCars.AddRange(await carService.SellerCarsByIdAsync(userId));
+            }
+
+            return View(allCars); 
         }
     }
 }

@@ -16,5 +16,9 @@ namespace CarSelling.Services.Data.Interfaces
         Task CreateCar(CarFormModel model, string sellerId);
 
         Task<AllCarsFilteredServiceModel> AllCarsFiltered(CarsAllQueryModel queryModel);
+
+        Task<ICollection<CarAllViewModel>> SellerCarsByIdAsync(string id);
+
+        Task<ICollection<CarAllViewModel>> UserBoughtCarsByIdAsync(string id);
     }
 }

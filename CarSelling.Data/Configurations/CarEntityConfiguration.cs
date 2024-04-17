@@ -22,6 +22,10 @@ namespace CarSelling.Data.Configurations
                 .HasDefaultValue(true);
 
             builder
+                .Property(h => h.IsBought)
+                .HasDefaultValue(false);
+
+            builder
                 .HasOne(c => c.Category)
                 .WithMany(c => c.Cars)
                 .HasForeignKey(f => f.CategoryId)
