@@ -61,6 +61,7 @@ namespace CarSelling.Services.Data
             };
 
             ICollection<CarAllViewModel> allCars = await carsQuery
+                .Where(h=>h.IsActive)
                 .Skip((queryModel.CurrentPage - 1) * queryModel.CarPerPage)
                 .Take(queryModel.CarPerPage)
                 .Select(c => new CarAllViewModel()
@@ -107,7 +108,10 @@ namespace CarSelling.Services.Data
 
         public async Task<ICollection<IndexViewModel>> LastFewCars()
         {
-            ICollection<IndexViewModel> LastCars = await dbContext.Cars.OrderByDescending(h => h.CreatedOn).Take(3)
+            ICollection<IndexViewModel> lastCars = await dbContext.Cars
+                .Where(h=>h.IsActive)
+                .OrderByDescending(h => h.CreatedOn)
+                .Take(3)
                 .Select(c => new IndexViewModel()
                 {
                     Id = c.Id.ToString(),
@@ -115,7 +119,7 @@ namespace CarSelling.Services.Data
                     Model = c.Model,
                     ImageUrl = c.ImageUrl
                 }).ToArrayAsync();
-            return LastCars;
+            return lastCars;
         }
     }
 }

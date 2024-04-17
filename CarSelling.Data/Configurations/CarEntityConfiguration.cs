@@ -18,6 +18,10 @@ namespace CarSelling.Data.Configurations
                 .HasDefaultValueSql("GETDATE()");
 
             builder
+                .Property(h => h.IsActive)
+                .HasDefaultValue(true);
+
+            builder
                 .HasOne(c => c.Category)
                 .WithMany(c => c.Cars)
                 .HasForeignKey(f => f.CategoryId)

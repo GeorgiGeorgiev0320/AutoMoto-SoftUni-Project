@@ -35,6 +35,8 @@ namespace CarSelling.Data.Models
         [MaxLength(ImageUrlMaxLength)]
         public string ImageUrl { get; set; } = null!;
 
+        public bool IsActive { get; set; }
+
         public decimal Price { get; set; }
 
         [Required]
