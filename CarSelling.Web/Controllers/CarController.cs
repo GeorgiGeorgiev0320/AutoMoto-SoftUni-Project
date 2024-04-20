@@ -190,26 +190,23 @@ namespace CarSelling.Web.Controllers
                 return RedirectToAction("Mine", "Car");
             }
 
-
-            var carToEdit = await carService.GetCarForEditAsync(id);
-
-            var carForm = new CarFormModel
+            try
             {
-                MakeId = carToEdit.MakeId,
-                CategoryId = carToEdit.CategoryId,
-                Makes = await makeService.GetMakesAsync(),
-                Categories = await categoryService.GetCategoriesAsync(),
-                Model = carToEdit.Model,
-                Mileage = carToEdit.Mileage,
-                HorsePower = carToEdit.HorsePower,
-                Description = carToEdit.Description,
-                ImageUrl = carToEdit.ImageUrl,
-                Price = carToEdit.Price,
-                Year = carToEdit.Year,
-            };
+                var carToEdit = await carService.GetCarForEditAsync(id);
+
+                carToEdit.Categories = await categoryService.GetCategoriesAsync();
+                carToEdit.Makes = await makeService.GetMakesAsync();
 
 
-            return View(carForm);
+                return View(carToEdit);
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         [HttpPost]
@@ -269,5 +266,93 @@ namespace CarSelling.Web.Controllers
             TempData[SuccessMessage] = "Cat edited successfully!";
             return RedirectToAction("Details", "Car", new{id});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Delete(string id)
+        {
+            bool carExists = await carService.CarExistsByIdAsync(id);
+
+            if (!carExists)
+            {
+                TempData[ErrorMessage] = "This car does not exists!";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
+
+            if (!isSeller)
+            {
+                TempData[ErrorMessage] = "You must be seller to delete this vehicle!";
+                return RedirectToAction("Become", "Seller");
+            }
+            string? sellerId = await sellerService.GetSellerIdByUsesId(User.GetId()!);
+
+            bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
+
+            if (!isSellerOwner)
+            {
+                TempData[ErrorMessage] = "You must be owner of the vehicle to delete it!";
+
+                return RedirectToAction("Mine", "Car");
+            }
+
+            try
+            {
+                var car = await carService.DeleteCarModelByIdAsync(id);
+                return View(car);
+            }
+            catch (Exception )
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Delete(string id, CarDeleteModel carDelete)
+        {
+            bool carExists = await carService.CarExistsByIdAsync(id);
+
+            if (!carExists)
+            {
+                TempData[ErrorMessage] = "This car does not exists!";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
+
+            if (!isSeller)
+            {
+                TempData[ErrorMessage] = "You must be seller to delete this vehicle!";
+                return RedirectToAction("Become", "Seller");
+            }
+            string? sellerId = await sellerService.GetSellerIdByUsesId(User.GetId()!);
+
+            bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
+
+            if (!isSellerOwner)
+            {
+                TempData[ErrorMessage] = "You must be owner of the vehicle to delete it!";
+
+                return RedirectToAction("Mine", "Car");
+            }
+
+            try
+            {
+                await carService.DeleteCarByIdAsync(id);
+                TempData[WarningMessage] = "The car has been deleted!";
+                return RedirectToAction("Mine");
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
     }
 }

@@ -202,6 +202,37 @@ namespace CarSelling.Services.Data
             return car;
         }
 
+        public async Task<CarDeleteModel> DeleteCarModelByIdAsync(string carId)
+        {
+            Car? carToDelete = await dbContext.Cars.Include(c=>c.Make)
+                .Where(c => c.IsActive)
+                .FirstOrDefaultAsync(c => c.Id.ToString() == carId);
+
+
+            var car = new CarDeleteModel
+            {
+                Id = carToDelete.Id.ToString(),
+                ImageUrl = carToDelete.ImageUrl,
+                Model = carToDelete.Model,
+                Make = carToDelete.Make.MakeName,
+                Description = carToDelete.Description,
+
+            };
+            return car;
+
+        }
+
+        public async Task DeleteCarByIdAsync(string id)
+        {
+            Car? carToDelete = await dbContext.Cars
+                .Where(c => c.IsActive)
+                .FirstOrDefaultAsync(c => c.Id.ToString() == id);
+
+            carToDelete.IsActive = false;
+            await dbContext.SaveChangesAsync();
+
+        }
+
         public async Task<ICollection<IndexViewModel>> LastFewCars()
         {
             ICollection<IndexViewModel> lastCars = await dbContext.Cars

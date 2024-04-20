@@ -30,5 +30,9 @@ namespace CarSelling.Services.Data.Interfaces
         Task EditCarByIdAsync(string id, CarFormModel car);
 
         Task<CarFormModel> GetCarForEditAsync(string id);
+
+        Task<CarDeleteModel> DeleteCarModelByIdAsync(string carId);
+
+        Task DeleteCarByIdAsync(string id);
     }
 }
