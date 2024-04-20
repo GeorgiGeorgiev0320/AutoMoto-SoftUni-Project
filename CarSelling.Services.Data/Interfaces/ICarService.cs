@@ -20,5 +20,7 @@ namespace CarSelling.Services.Data.Interfaces
         Task<ICollection<CarAllViewModel>> SellerCarsByIdAsync(string id);
 
         Task<ICollection<CarAllViewModel>> UserBoughtCarsByIdAsync(string id);
+
+        Task<CarDetailsViewModel?> CarDetailsByIdAsync(string id);
     }
 }

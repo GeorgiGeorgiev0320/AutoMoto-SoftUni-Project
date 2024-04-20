@@ -50,7 +50,7 @@ namespace CarSelling.Web.Controllers
             {
                 TempData[ErrorMessage] = "You have to become seller to add cars!";
 
-                RedirectToAction("Become", "Seller");
+                return RedirectToAction("Become", "Seller");
             }
 
             CarFormModel car = new CarFormModel()
@@ -72,7 +72,7 @@ namespace CarSelling.Web.Controllers
             {
                 TempData[ErrorMessage] = "You have to become seller to add cars!";
 
-                RedirectToAction("Become", "Seller");
+               return RedirectToAction("Become", "Seller");
             }
 
             bool validCategory = await categoryService.IsValidCategory(modelToModel.CategoryId);
@@ -126,10 +126,25 @@ namespace CarSelling.Web.Controllers
             }
             else
             {
-                allCars.AddRange(await carService.SellerCarsByIdAsync(userId));
+                allCars.AddRange(await carService.UserBoughtCarsByIdAsync(userId));
             }
 
             return View(allCars); 
+        }
+
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(string id)
+        {
+            var carDetails = await carService.CarDetailsByIdAsync(id);
+
+            if (carDetails == null)
+            {
+                TempData[ErrorMessage] = "Car with this id does not exist";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            return View(carDetails);
         }
     }
 }

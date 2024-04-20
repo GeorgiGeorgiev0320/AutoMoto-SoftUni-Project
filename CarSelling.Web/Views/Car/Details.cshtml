@@ -1,0 +1,65 @@
+﻿@model CarDetailsViewModel
+@{
+    ViewData["Title"] = "Car Details";
+}
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <h1 class="mb-4">@Model.Make @Model.Model</h1>
+
+            <div>
+                <img src="@Model.ImageUrl" alt="Car Image" class="img-fluid rounded" />
+            </div>
+
+            <div class="mt-4">
+                <h2>Description:</h2>
+                <p>@Model.Description</p>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">Details</h2>
+
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Category:</strong> @Model.Category</li>
+                        <li class="list-group-item"><strong>ID:</strong> @Model.Id</li>
+                        <li class="list-group-item"><strong>Date:</strong> @Model.Date</li>
+                        <li class="list-group-item"><strong>Price:</strong> @Model.Price.ToString("C")</li>
+                        <li class="list-group-item"><strong>Mileage:</strong> @Model.Mileage.ToString() miles</li>
+                    </ul>
+                </div>
+
+                <div class="card-footer">
+                    @if (Model.IsBought)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            This car has been bought.
+                        </div>
+                    }
+                    else
+                    {
+                        <form method="post" asp-page-handler="Buy">
+                            <button type="submit" class="btn btn-primary">Buy Now</button>
+                        </form>
+                    }
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h2 class="card-title">Seller Information</h2>
+                        <ul class="list-group list-group-flush">
+                            <li class="list-group-item"><strong>Seller Name:</strong> @Model.Seller.Email</li>
+                            <li class="list-group-item"><strong>Address:</strong> @Model.Seller.Address</li>
+                            <li class="list-group-item"><strong>Phone Number:</strong> @Model.Seller.Number</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

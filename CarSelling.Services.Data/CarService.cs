@@ -10,6 +10,7 @@ using CarSelling.Services.Data.Models.Car;
 using CarSelling.Web.ViewModels.Car;
 using CarSelling.Web.ViewModels.Car.Enums;
 using CarSelling.Web.ViewModels.Home;
+using CarSelling.Web.ViewModels.Seller;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarSelling.Services.Data
@@ -106,6 +107,41 @@ namespace CarSelling.Services.Data
             await dbContext.SaveChangesAsync();
         }
 
+        public async Task<CarDetailsViewModel?> CarDetailsByIdAsync(string id)
+        {
+            Car? carFound = await dbContext.Cars
+                .Include(c=>c.Category)
+                .Include(c=>c.Make)
+                .Include(c=>c.Seller).ThenInclude(s=>s.User)
+                .Where(c => c.IsActive)
+                .FirstOrDefaultAsync(c => c.Id.ToString() == id);
+
+            if (carFound == null)
+            {
+                return null;
+            }
+            
+            return  new CarDetailsViewModel
+            {
+                Id = carFound.Id.ToString(),
+                Make = carFound.Make.MakeName,
+                Category = carFound.Category.Name,
+                Description = carFound.Description,
+                Model = carFound.Model,
+                Date = carFound.Year.ToString("yyyy-MM-dd"),
+                ImageUrl = carFound.ImageUrl,
+                Price = carFound.Price,
+                Mileage = carFound.Mileage,
+                IsBought = carFound.IsBought,
+                Seller = new SellerDetailsViewModel()
+                {
+                    Address = carFound.Seller.Address,
+                    Email = carFound.Seller.User.Email,
+                    Number = carFound.Seller.PhoneNumber
+                }
+            };
+        }
+
         public async Task<ICollection<IndexViewModel>> LastFewCars()
         {
             ICollection<IndexViewModel> lastCars = await dbContext.Cars
@@ -124,7 +160,7 @@ namespace CarSelling.Services.Data
 
         public async Task<ICollection<CarAllViewModel>> SellerCarsByIdAsync(string id)
         {
-            var sellerCars = await dbContext.Cars.Where(c => c.BuyerId.ToString() == id).Select(x => new CarAllViewModel
+            var sellerCars = await dbContext.Cars.Where(c => c.SellerId.ToString() == id && c.IsActive == true).Select(x => new CarAllViewModel
             {
                 Id = x.Id.ToString(),
                 MakeName = x.Make.MakeName,
@@ -141,7 +177,7 @@ namespace CarSelling.Services.Data
 
         public async Task<ICollection<CarAllViewModel>> UserBoughtCarsByIdAsync(string id)
         {
-            var userCars = await dbContext.Cars.Where(c => c.BuyerId.HasValue && c.BuyerId.ToString() == id).Select(x => new CarAllViewModel
+            var userCars = await dbContext.Cars.Where(c => c.IsBought==true && c.BuyerId.ToString() == id && c.IsActive==true).Select(x => new CarAllViewModel
             {
                 Id = x.Id.ToString(),
                 MakeName = x.Make.MakeName,
