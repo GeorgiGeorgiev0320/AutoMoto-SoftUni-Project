@@ -13,7 +13,7 @@ namespace CarSelling.Services.Data.Interfaces
     {
         Task<ICollection<IndexViewModel>> LastFewCars();
 
-        Task CreateCar(CarFormModel model, string sellerId);
+        Task<string> CreateCar(CarFormModel model, string sellerId);
 
         Task<AllCarsFilteredServiceModel> AllCarsFiltered(CarsAllQueryModel queryModel);
 
@@ -22,5 +22,13 @@ namespace CarSelling.Services.Data.Interfaces
         Task<ICollection<CarAllViewModel>> UserBoughtCarsByIdAsync(string id);
 
         Task<CarDetailsViewModel?> CarDetailsByIdAsync(string id);
+
+        Task<bool> CarExistsByIdAsync(string id);
+
+        Task<bool> IsSellerIdOwnerByIdAsync(string sellerId,string id);
+
+        Task EditCarByIdAsync(string id, CarFormModel car);
+
+        Task<CarFormModel> GetCarForEditAsync(string id);
     }
 }

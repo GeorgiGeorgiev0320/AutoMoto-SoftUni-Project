@@ -86,7 +86,7 @@ namespace CarSelling.Services.Data
             };
         }
 
-        public async Task CreateCar(CarFormModel model, string sellerId)
+        public async Task<string> CreateCar(CarFormModel model, string sellerId)
         {
             Car car = new Car()
             {
@@ -105,6 +105,8 @@ namespace CarSelling.Services.Data
 
             await dbContext.Cars.AddAsync(car);
             await dbContext.SaveChangesAsync();
+
+            return car.Id.ToString();
         }
 
         public async Task<CarDetailsViewModel?> CarDetailsByIdAsync(string id)
@@ -140,6 +142,64 @@ namespace CarSelling.Services.Data
                     Number = carFound.Seller.PhoneNumber
                 }
             };
+        }
+
+        public async Task<bool> CarExistsByIdAsync(string id)
+        {
+
+            bool result = await dbContext.Cars.AnyAsync(c => c.Id.ToString() == id);
+
+            return result;
+        }
+
+        public async Task<bool> IsSellerIdOwnerByIdAsync(string sellerId, string id)
+        {
+            bool result = await dbContext.Cars.AnyAsync(s => s.SellerId.ToString() == sellerId && s.Id.ToString() == id);
+
+            return result;
+        }
+
+        public async Task EditCarByIdAsync(string id, CarFormModel car)
+        {
+            var carToEdit = await dbContext.Cars.Where(c=>c.IsActive).FirstAsync(c => c.Id.ToString() == id);
+
+            carToEdit.CategoryId = car.CategoryId;
+            carToEdit.Description = car.Description;
+            carToEdit.MakeId = car.MakeId;
+            carToEdit.HorsePower = car.HorsePower;
+            carToEdit.Mileage = car.Mileage;
+            carToEdit.ImageUrl = car.ImageUrl;
+            carToEdit.Price = car.Price;
+            carToEdit.Model = car.Model;
+            carToEdit.Year = car.Year;
+
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<CarFormModel> GetCarForEditAsync(string id)
+        {
+            Car? carToEdit = await dbContext.Cars
+                .Include(c => c.Category)
+                .Include(c => c.Make)
+                .Where(c => c.IsActive)
+                .FirstOrDefaultAsync(c => c.Id.ToString() == id);
+
+            var car = new CarFormModel
+            {
+                MakeId = carToEdit.MakeId,
+                CategoryId = carToEdit.CategoryId,
+                Model = carToEdit.Model,
+                Mileage = carToEdit.Mileage,
+                HorsePower = carToEdit.HorsePower,
+                Description = carToEdit.Description,
+                ImageUrl = carToEdit.ImageUrl,
+                Price = carToEdit.Price,
+                Year = carToEdit.Year,
+
+            };
+
+
+            return car;
         }
 
         public async Task<ICollection<IndexViewModel>> LastFewCars()

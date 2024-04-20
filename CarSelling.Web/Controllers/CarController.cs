@@ -53,13 +53,24 @@ namespace CarSelling.Web.Controllers
                 return RedirectToAction("Become", "Seller");
             }
 
-            CarFormModel car = new CarFormModel()
-            {
-                Categories = await categoryService.GetCategoriesAsync(),
-                Makes = await makeService.GetMakesAsync()
-            };
 
-            return View(car);
+            try
+            {
+                CarFormModel car = new CarFormModel()
+                {
+                    Categories = await categoryService.GetCategoriesAsync(),
+                    Makes = await makeService.GetMakesAsync()
+                };
+
+                return View(car);
+            }
+            catch (Exception )
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+           
         }
 
 
@@ -98,7 +109,8 @@ namespace CarSelling.Web.Controllers
             try
             {
                 string? sellerId = await sellerService.GetSellerIdByUsesId(this.User.GetId()!);
-                await carService.CreateCar(modelToModel, sellerId!);
+                string carId = await carService.CreateCar(modelToModel, sellerId!);
+                return RedirectToAction("Details", "Car", new {id=carId});
 
             }
             catch (Exception)
@@ -108,7 +120,7 @@ namespace CarSelling.Web.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            return RedirectToAction("All", "Car");
+            
         }
 
         public async Task<IActionResult> Mine()
@@ -145,6 +157,117 @@ namespace CarSelling.Web.Controllers
             }
 
             return View(carDetails);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Edit(string id)
+        {
+            bool carExists = await carService.CarExistsByIdAsync(id);
+
+            if (!carExists)
+            {
+                TempData[ErrorMessage] = "This car does not exists!";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
+
+            if (!isSeller)
+            {
+                TempData[ErrorMessage] = "You must be seller to edit this vehicle!";
+                return RedirectToAction("Become", "Seller");
+            }
+
+            string? sellerId = await sellerService.GetSellerIdByUsesId(User.GetId()!);
+
+            bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
+
+            if (!isSellerOwner)
+            {
+                TempData[ErrorMessage] = "You must be owner of the vehicle to edit it!";
+
+                return RedirectToAction("Mine", "Car");
+            }
+
+
+            var carToEdit = await carService.GetCarForEditAsync(id);
+
+            var carForm = new CarFormModel
+            {
+                MakeId = carToEdit.MakeId,
+                CategoryId = carToEdit.CategoryId,
+                Makes = await makeService.GetMakesAsync(),
+                Categories = await categoryService.GetCategoriesAsync(),
+                Model = carToEdit.Model,
+                Mileage = carToEdit.Mileage,
+                HorsePower = carToEdit.HorsePower,
+                Description = carToEdit.Description,
+                ImageUrl = carToEdit.ImageUrl,
+                Price = carToEdit.Price,
+                Year = carToEdit.Year,
+            };
+
+
+            return View(carForm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(string id, CarFormModel editedCar)
+        {
+
+            if (!ModelState.IsValid)
+            {
+                editedCar.Categories = await categoryService.GetCategoriesAsync();
+                editedCar.Makes = await makeService.GetMakesAsync();
+
+                return View(editedCar);
+            }
+            bool carExists = await carService.CarExistsByIdAsync(id);
+
+            if (!carExists)
+            {
+                TempData[ErrorMessage] = "This car does not exists!";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
+
+            if (!isSeller)
+            {
+                TempData[ErrorMessage] = "You must be seller to edit this vehicle!";
+                return RedirectToAction("Become", "Seller");
+            }
+            string? sellerId = await sellerService.GetSellerIdByUsesId(User.GetId()!);
+
+            bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
+
+            if (!isSellerOwner)
+            {
+                TempData[ErrorMessage] = "You must be owner of the vehicle to edit it!";
+
+                return RedirectToAction("Mine", "Car");
+            }
+
+
+
+            try
+            {
+                await carService.EditCarByIdAsync(id, editedCar);
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError(string.Empty, "An error occured. Try again later!");
+
+                editedCar.Categories = await categoryService.GetCategoriesAsync();
+                editedCar.Makes = await makeService.GetMakesAsync();
+
+                return View(editedCar);
+            }
+
+            TempData[SuccessMessage] = "Cat edited successfully!";
+            return RedirectToAction("Details", "Car", new{id});
         }
     }
 }
