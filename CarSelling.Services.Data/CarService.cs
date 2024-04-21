@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -233,6 +234,13 @@ namespace CarSelling.Services.Data
 
         }
 
+        public async Task<bool> IsBought(string carId)
+        {
+            Car isBought = await dbContext.Cars.FirstAsync(c => c.Id.ToString() == carId);
+
+            return isBought.BuyerId.HasValue;
+        }
+
         public async Task<ICollection<IndexViewModel>> LastFewCars()
         {
             ICollection<IndexViewModel> lastCars = await dbContext.Cars
@@ -281,6 +289,15 @@ namespace CarSelling.Services.Data
             }).ToArrayAsync();
 
             return userCars;
+        }
+
+        public async Task BuyCar(string userId, string carId)
+        {
+            Car carBought = await dbContext.Cars.Where(c => c.Id.ToString() == carId && c.IsActive).FirstAsync();
+
+            carBought.BuyerId = Guid.Parse(userId);
+            carBought.IsBought = true;
+            await dbContext.SaveChangesAsync();
         }
     }
 }
