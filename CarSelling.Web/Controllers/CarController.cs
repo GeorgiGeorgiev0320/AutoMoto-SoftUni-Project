@@ -392,5 +392,43 @@ namespace CarSelling.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Sell(string id)
+        {
+            var carExists = await carService.CarExistsByIdAsync(id);
+            if (!carExists)
+            {
+                TempData[ErrorMessage] = "Car with the given Id does not exists!";
+
+                return RedirectToAction("All", "Car");
+            }
+
+            var carIsBought = await carService.IsBought(id);
+            if (!carIsBought)
+            {
+                TempData[ErrorMessage] = "Car with the given Id not bought!";
+                return RedirectToAction("Mine", "Car");
+            }
+
+            var userCart = await carService.IsBoughtByUserIdAsync(id,User.GetId()!);
+            if (!userCart)
+            {
+                TempData[ErrorMessage] = "Car with the given Id not yours!";
+                return RedirectToAction("Mine", "Car");
+            }
+
+            try
+            {
+                await carService.SellCarAsync(id);
+                return RedirectToAction("Mine", "Car");
+            }
+            catch (Exception)
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
     }
 }

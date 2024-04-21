@@ -38,5 +38,9 @@ namespace CarSelling.Services.Data.Interfaces
         Task<bool> IsBought(string carId);
 
         Task BuyCar(string userId, string carId);
+
+        Task SellCarAsync(string carId);
+
+        Task<bool> IsBoughtByUserIdAsync(string carId, string userId);
     }
 }

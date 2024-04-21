@@ -299,5 +299,22 @@ namespace CarSelling.Services.Data
             carBought.IsBought = true;
             await dbContext.SaveChangesAsync();
         }
+
+        public async Task SellCarAsync(string carId)
+        {
+            Car carBought = await dbContext.Cars.Where(c => c.Id.ToString() == carId && c.IsActive).FirstAsync();
+            carBought.BuyerId = null;
+            carBought.IsBought = false;
+            await dbContext.SaveChangesAsync();
+        }
+
+        public async Task<bool> IsBoughtByUserIdAsync(string carId, string userId)
+        {
+            Car carBought = await dbContext.Cars.Where(c => c.Id.ToString() == carId && c.IsActive).FirstAsync();
+
+            bool result = carBought.BuyerId.HasValue && carBought.BuyerId.ToString() == userId;
+
+            return result;
+        }
     }
 }
