@@ -59,7 +59,7 @@ namespace CarSelling.Services.Data
                 CarSorting.Oldest => carsQuery.OrderBy(c => c.Year),
                 CarSorting.LastAdded => carsQuery.OrderByDescending(c => c.CreatedOn),
                 CarSorting.FirstAdded => carsQuery.OrderBy(c => c.CreatedOn),
-                CarSorting.BoughtCars => carsQuery.OrderBy(c => c.BuyerId != null).ThenByDescending(c=>c.CreatedOn)
+                CarSorting.BoughtCars => carsQuery.OrderBy(c => c.BuyerId == null).ThenByDescending(c=>c.CreatedOn)
             };
 
             ICollection<CarAllViewModel> allCars = await carsQuery
