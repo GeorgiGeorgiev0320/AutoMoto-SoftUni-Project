@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Error";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Error</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .error-message {
+            text-align: center;
+            animation: shake 0.5s;
+        }
+
+        .error-code {
+            font-size: 72px;
+            color: #dc3545;
+            animation: pulse 1s infinite alternate;
+        }
+
+        .error-text {
+            font-size: 24px;
+            color: #333;
+            animation: bounce 1s infinite alternate;
+        }
+
+        @@keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        50% { transform: translateX(5px); }
+        75% { transform: translateX(-5px); }
+        100% { transform: translateX(0); }
+        }
+
+        @@keyframes pulse {
+        0% { transform: scale(1); }
+        100% { transform: scale(1.1); }
+        }
+
+        @@keyframes bounce {
+        0% { transform: translateY(0); }
+        100% { transform: translateY(-10px); }
+        }
+        </style>
+</head>
+<body>
+<div class="container">
+    <div class="error-message">
+        <div class="error-code">404</div>
+        <div class="error-text">Sorry, the page you requested could not be found.</div>
+    </div>
+</div>
+</body>
+</html>
