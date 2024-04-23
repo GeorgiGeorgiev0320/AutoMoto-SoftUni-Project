@@ -8,6 +8,7 @@ namespace CarSelling.Web.ViewModels.Seller
 {
     public class SellerDetailsViewModel
     {
+        public string FullName { get; set; } = null!;
         public string Email { get; set; } = null!;
 
         public string Number { get; set; } = null!;

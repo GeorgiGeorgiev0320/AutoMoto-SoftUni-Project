@@ -4,16 +4,18 @@
 @using CarSelling.Web.Infrastructure.Extensions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject IUserService UserService
 @inject ISellerService SellerService
 @{
-    bool isUserSeller = await SellerService.IsSellerEnabled(User.GetId());
+    bool isUserSeller = await SellerService.IsSellerEnabled(User.GetId()!);
+    string UserName = await UserService.FindNameByEmailAsync(User.Identity?.Name!);
 }
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
 {
     <li class="nav-item">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
+        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserName!</a>
     </li>
     @if (!isUserSeller)
     {

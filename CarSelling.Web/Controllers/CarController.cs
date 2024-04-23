@@ -16,13 +16,15 @@ namespace CarSelling.Web.Controllers
         private readonly IMakeService makeService;
         private readonly ISellerService sellerService;
         private readonly ICarService carService;
+        private readonly IUserService userService;
 
-        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService, ICarService carService)
+        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService, ICarService carService, IUserService userService)
         {
             this.categoryService = categoryService;
             this.makeService = makeService;
             this.sellerService = sellerService;
             this.carService = carService;
+            this.userService = userService;
         }
 
 
@@ -147,16 +149,31 @@ namespace CarSelling.Web.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Details(string id)
         {
-            var carDetails = await carService.CarDetailsByIdAsync(id);
+            var carDetailsTry = await carService.CarDetailsByIdAsync(id);
 
-            if (carDetails == null)
+            if (carDetailsTry == null)
             {
                 TempData[ErrorMessage] = "Car with this id does not exist";
 
                 return RedirectToAction("All", "Car");
             }
 
-            return View(carDetails);
+
+            try
+            {
+                var carDetails = await carService.CarDetailsByIdAsync(id);
+                carDetails.Seller.FullName = await userService.FindNameByEmailAsync(User.Identity?.Name!);
+
+
+                return View(carDetails);
+            }
+            catch (Exception e)
+            {
+                TempData[ErrorMessage] = "Error occured! Try again later!";
+
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         [HttpGet]
