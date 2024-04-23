@@ -1,0 +1,41 @@
+﻿@model CategoryDetailsViewModel
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<style>
+    .category-details-container {
+        background-color: #f9f9f9;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .category-details-title {
+        text-align: center;
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .category-details-label {
+        font-weight: bold;
+    }
+
+    .category-details-value {
+        margin-left: 10px;
+    }
+</style>
+
+<h2 class="category-details-title">@ViewData["Title"]</h2>
+<hr />
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 category-details-container">
+            <p class="category-details-label">Name:</p>
+            <p class="category-details-value">@Model.Name</p>
+        </div>
+    </div>
+</div>

@@ -13,6 +13,8 @@ namespace CarSelling.Services.Data.Interfaces
 
         Task<ICollection<AllCategoriesViewModel>> GetAllCategoriesToListAsync();
 
+        Task<CategoryDetailsViewModel> GetDetailsByIdAsync(int id);
+
         Task<bool> IsValidCategory(int id);
 
         Task<ICollection<string>> AllCategoryNamesAsync();

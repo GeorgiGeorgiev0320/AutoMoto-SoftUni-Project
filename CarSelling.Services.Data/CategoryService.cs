@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CarSelling.Common;
 using CarSelling.Data;
+using CarSelling.Data.Models;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.ViewModels.Category;
 using Microsoft.EntityFrameworkCore;
@@ -39,6 +41,17 @@ namespace CarSelling.Services.Data
                 .ToArrayAsync();
 
             return allCategories;
+        }
+
+        public async Task<CategoryDetailsViewModel> GetDetailsByIdAsync(int id)
+        {
+           Category category = await dbContext.Categories.FirstAsync(c => c.Id == id);
+
+           return new CategoryDetailsViewModel()
+           {
+               Id = category.Id,
+               Name = category.Name
+           };
         }
 
         public async Task<bool> IsValidCategory(int id)
