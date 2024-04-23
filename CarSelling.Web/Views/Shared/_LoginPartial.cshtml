@@ -1,7 +1,13 @@
 ﻿@using Microsoft.AspNetCore.Identity
 @using CarSelling.Data.Models
+@using CarSelling.Services.Data.Interfaces
+@using CarSelling.Web.Infrastructure.Extensions
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
+@inject ISellerService SellerService
+@{
+    bool isUserSeller = await SellerService.IsSellerEnabled(User.GetId());
+}
 
 <ul class="navbar-nav">
 @if (SignInManager.IsSignedIn(User))
@@ -9,9 +15,12 @@
     <li class="nav-item">
         <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-area="" asp-controller="Seller"  asp-action="Become" >Become seller :O</a>
-    </li>
+    @if (!isUserSeller)
+    {
+        <li class="nav-item">
+            <a class="nav-link text-dark" asp-area="" asp-controller="Seller"  asp-action="Become" >Become seller :O</a>
+        </li>
+    }
     <li class="nav-item">
         <form  class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
             <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>

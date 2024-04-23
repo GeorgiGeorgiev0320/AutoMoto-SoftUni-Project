@@ -1,4 +1,10 @@
 ﻿@using static CarSelling.Common.AppConstants
+@using CarSelling.Services.Data.Interfaces
+@using CarSelling.Web.Infrastructure.Extensions
+@inject ISellerService SellerService
+@{
+    bool isUserSeller = await SellerService.IsSellerEnabled(User.GetId());
+}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,9 +39,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Mine">My cars</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Add">Add cars</a>
-                        </li>
+                        @if (isUserSeller)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Car" asp-action="Add">Add cars</a>
+                            </li>
+                        }
                     }
                 </ul>
                 <partial name="_LoginPartial"/>

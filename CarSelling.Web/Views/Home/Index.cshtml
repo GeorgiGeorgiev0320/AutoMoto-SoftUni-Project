@@ -1,4 +1,6 @@
-﻿@model ICollection<IndexViewModel>
+﻿@using CarSelling.Services.Data.Interfaces
+@using CarSelling.Web.Infrastructure.Extensions
+@model ICollection<IndexViewModel>
 
 @{
     ViewData["Title"] = "Home Page";
@@ -6,10 +8,15 @@
     var cars = Model.ToList();
 }
 
+@inject ISellerService SellerService
+@{
+    bool isSeller = await SellerService.IsSellerEnabled(User.GetId());
+}
+
 @if (!cars.Any())
 {
         <div class="mt-4 p-5 bg-light">
-            <h1 class="display-4">Here you can buy good cars with good history!</h1>
+            <h1 class="display-4">Here you can buy good cars with clean titles and low mileage!</h1>
             <p class="lead">
                 There are no cars, add some?
             </p>
@@ -17,8 +24,11 @@
             <p class="lead">
             @if (User.Identity?.IsAuthenticated ?? false)
             {
-                        <a asp-controller="Car" asp-action="Add" class="btn btn-primary btn-lg"
-           role="button">Add House</a>
+                if (isSeller)
+                {
+                    <a asp-controller="Car" asp-action="Add" class="btn btn-primary btn-lg"
+                       role="button">Add Car</a>
+                } 
             }
             </p>
         </div>

@@ -1,4 +1,13 @@
-﻿@model CarAllViewModel
+﻿@using CarSelling.Services.Data.Interfaces
+@using CarSelling.Web.Infrastructure.Extensions
+@model CarAllViewModel
+@inject ISellerService SellerService
+@inject ICarService CarService
+@{
+    bool isSellerOwner = await SellerService.HasCarByIdAsync(User.GetId(), Model.Id);
+    bool isUserSeller = await SellerService.IsSellerEnabled(User.GetId());
+    bool isCarBoughtByUser = await CarService.IsBoughtByUserIdAsync(Model.Id, User.GetId());
+}
 
 <div class="col-md-4">
     <div class="card mb-3">
@@ -22,25 +31,34 @@
 
             @if (this.User.Identity?.IsAuthenticated ?? false)
             {
-                <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id"
-                   class="btn btn-warning">Edit</a>
-                <a asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id"
-                   class="btn btn-danger">Delete</a>
+                @if (isSellerOwner && isUserSeller)
+                {
+                    <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id"
+                       class="btn btn-warning">Edit</a>
+                    <a asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id"
+                       class="btn btn-danger">Delete</a>
+                }
                 <p></p>
 
-                @if (!Model.IsBought)
+                @if (!Model.IsBought )
                 {
-                    <form class="input-group-sm" asp-controller="Car"
-                          asp-action="Buy" asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Buy" />
-                    </form>
+                    if (!isUserSeller)
+                    {
+                        <form class="input-group-sm" asp-controller="Car"
+                              asp-action="Buy" asp-route-id="@Model.Id" method="post">
+                            <input class="btn btn-primary" type="submit" value="Buy" />
+                        </form>
+                    }
                 }
                 else
                 {
-                    <form asp-controller="Car" asp-action="Sell"
-                          asp-route-id="@Model.Id" method="post">
-                        <input class="btn btn-primary" type="submit" value="Sell" />
-                    </form>
+                    @if (!isUserSeller && isCarBoughtByUser)
+                    {
+                        <form asp-controller="Car" asp-action="Sell"
+                              asp-route-id="@Model.Id" method="post">
+                            <input class="btn btn-primary" type="submit" value="Sell" />
+                        </form>
+                    }
                 }
             }
         </div>

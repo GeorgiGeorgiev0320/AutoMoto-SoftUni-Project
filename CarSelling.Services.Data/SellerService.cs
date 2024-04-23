@@ -61,5 +61,18 @@ namespace CarSelling.Services.Data
 
             return seller.Id.ToString();
         }
+
+        public async Task<bool> HasCarByIdAsync(string userId, string carId)
+        {
+            Seller? seller = await dbContext.Sellers.Include(c=>c.CarsForSelling).FirstOrDefaultAsync(f => f.UserId.ToString() == userId);
+
+            if (seller == null)
+            {
+                return false;
+            }
+
+
+            return seller.CarsForSelling.Any(c => c.Id.ToString() == carId.ToLower());
+        }
     }
 }

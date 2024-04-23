@@ -4,6 +4,7 @@ using CarSelling.Services.Data;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.Infrastructure.ModelBinders;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarSelling.Web
@@ -40,6 +41,7 @@ namespace CarSelling.Web
                 .AddMvcOptions(options =>
                 {
                     options.ModelBinderProviders.Insert(0, new DecimalModelBinderProvider());
+                    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
                 });
 
             var app = builder.Build();
@@ -65,11 +67,16 @@ namespace CarSelling.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
-            app.MapRazorPages();
+            app.UseEndpoints(endpoints =>
+            {
 
+                //endpoints.MapControllerRoute(
+                //    name: "ProtectingUrlPattern",
+                //    pattern: "/{controller}/{action}/{id}/{information}");
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapRazorPages();
+            });
+            
             app.Run();
         }
     }
