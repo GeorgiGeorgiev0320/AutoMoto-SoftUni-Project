@@ -11,6 +11,8 @@ namespace CarSelling.Services.Data.Interfaces
     {
         Task<ICollection<CategoryCarFormModel>> GetCategoriesAsync();
 
+        Task<ICollection<AllCategoriesViewModel>> GetAllCategoriesToListAsync();
+
         Task<bool> IsValidCategory(int id);
 
         Task<ICollection<string>> AllCategoryNamesAsync();

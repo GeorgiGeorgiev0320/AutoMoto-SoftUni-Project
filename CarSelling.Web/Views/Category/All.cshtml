@@ -1,0 +1,13 @@
+﻿@model ICollection<AllCategoriesViewModel>
+
+@{
+    ViewData["Title"] = "All Categories";
+}
+<div class="list-group">
+@foreach (AllCategoriesViewModel category in Model)
+{ 
+    <a class="list-group-item list-group-item-action" 
+       asp-controller="Category" asp-action="Details" 
+       asp-route-id="@category.Id" asp-route-information="@category.GetUrlInformation()">@category.Name</a>
+}
+</div>

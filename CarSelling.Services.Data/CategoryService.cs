@@ -27,6 +27,20 @@ namespace CarSelling.Services.Data
             }).ToArrayAsync();
         }
 
+        public async Task<ICollection<AllCategoriesViewModel>> GetAllCategoriesToListAsync()
+        {
+            ICollection<AllCategoriesViewModel> allCategories = await dbContext.Categories
+                .AsNoTracking()
+                .Select(c=>new AllCategoriesViewModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name
+                })
+                .ToArrayAsync();
+
+            return allCategories;
+        }
+
         public async Task<bool> IsValidCategory(int id)
         {
             return await dbContext.Categories.AnyAsync(h => h.Id == id);

@@ -70,9 +70,11 @@ namespace CarSelling.Web
             app.UseEndpoints(endpoints =>
             {
 
-                //endpoints.MapControllerRoute(
-                //    name: "ProtectingUrlPattern",
-                //    pattern: "/{controller}/{action}/{id}/{information}");
+                endpoints.MapControllerRoute(
+                    name: "ProtectingUrlRoute",
+                    pattern: "/{controller}/{action}/{id}/{information}",
+                    defaults: new { Controller = "Category", Action = "Details" });
+                   
                 endpoints.MapDefaultControllerRoute();
                 endpoints.MapRazorPages();
             });
