@@ -1,0 +1,127 @@
+﻿@model LoginFormModel
+
+@{
+    ViewData["Title"] = "Log in";
+}
+
+<style>
+    .login-container {
+        margin-top: 50px;
+    }
+
+    .login-form {
+        background-color: #f9f9f9;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-title {
+        text-align: center;
+        margin-bottom: 20px;
+        font-size: 24px;
+        color: #333;
+        text-transform: uppercase;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-control {
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        background-color: #f5f5f5;
+        transition: border-color 0.3s, background-color 0.3s;
+        width: 100%;
+    }
+
+        .form-control:focus {
+            border-color: #007bff;
+            background-color: #fff;
+        }
+
+    .form-label {
+        font-size: 16px;
+        color: #555;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 15px;
+        border: none;
+        border-radius: 8px;
+        background-color: #007bff;
+        color: #fff;
+        cursor: pointer;
+        font-size: 18px;
+        text-transform: uppercase;
+        transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+    }
+
+        .btn-login:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.2);
+        }
+
+    .register-link {
+        text-align: center;
+        margin-top: 20px;
+    }
+
+        .register-link a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+            .register-link a:hover {
+                color: #0056b3;
+            }
+</style>
+
+<h1 class="login-title">@ViewData["Title"]</h1>
+
+<div class="container login-container">
+    <div class="row">
+        <div class="col-md-4 offset-md-4">
+            <form class="login-form" id="account" method="post">
+                <h2 class="login-title">Use a local account to log in</h2>
+                <hr />
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label class="form-label" asp-for="Email">Email</label>
+                    <input asp-for="Email" class="form-control" autocomplete="username" aria-required="true" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" asp-for="Password">Password</label>
+                    <input asp-for="Password" class="form-control" autocomplete="current-password" aria-required="true" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" asp-for="RememberMe" />
+                    <label class="form-check-label" asp-for="RememberMe">Remember me</label>
+                </div>
+                <div>
+                    <button id="login-submit" type="submit" class="btn btn-lg btn-login">Log in</button>
+                </div>
+                <div class="register-link">
+                    <p>
+                        <a asp-controller="User" asp-action="Register">Register as a new user</a>
+                    </p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
