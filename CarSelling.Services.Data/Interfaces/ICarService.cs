@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using CarSelling.Services.Data.Models.Car;
+using CarSelling.Services.Data.Models.Statistics;
 using CarSelling.Web.ViewModels.Car;
 using CarSelling.Web.ViewModels.Home;
 
@@ -42,5 +43,7 @@ namespace CarSelling.Services.Data.Interfaces
         Task SellCarAsync(string carId);
 
         Task<bool> IsBoughtByUserIdAsync(string carId, string userId);
+
+        Task<StatisticsServiceModel> GetStatisticsAsync();
     }
 }

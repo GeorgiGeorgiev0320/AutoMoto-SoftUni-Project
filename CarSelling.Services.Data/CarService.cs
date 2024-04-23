@@ -8,6 +8,7 @@ using CarSelling.Data;
 using CarSelling.Data.Models;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Services.Data.Models.Car;
+using CarSelling.Services.Data.Models.Statistics;
 using CarSelling.Web.ViewModels.Car;
 using CarSelling.Web.ViewModels.Car.Enums;
 using CarSelling.Web.ViewModels.Home;
@@ -315,6 +316,15 @@ namespace CarSelling.Services.Data
             bool result = carBought.BuyerId.HasValue && carBought.BuyerId.ToString() == userId;
 
             return result;
+        }
+
+        public async Task<StatisticsServiceModel> GetStatisticsAsync()
+        {
+            return new StatisticsServiceModel()
+            {
+                TotalListedCars = await dbContext.Cars.CountAsync(),
+                TotalBought = await dbContext.Cars.Where(c => c.BuyerId.HasValue).CountAsync()
+            };
         }
     }
 }
