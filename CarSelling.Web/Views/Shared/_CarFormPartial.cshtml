@@ -1,67 +1,151 @@
 ﻿@model CarFormModel
 
-<div class="row">
-    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form method="post">
-            <div class="form-group">
-                <label asp-for="Model"></label>
-                <input asp-for="Model" class="form-control" placeholder="Model...">
-                <span asp-validation-for="Model" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Description"></label>
-                <textarea asp-for="Description" rows="4" class="form-control" placeholder="This golf has V12 lemborghini engine and...."></textarea>
-                <span asp-validation-for="Description" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ImageUrl"></label>
-                <input asp-for="ImageUrl" class="form-control" placeholder="Your link here...">
-                <span asp-validation-for="ImageUrl" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Price"></label>
-                <input asp-for="Price" class="form-control" >
-                <span asp-validation-for="Price" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Year"></label>
-                <input asp-for="Year" class="form-control" type="date">
-                <span asp-validation-for="Year" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="HorsePower"></label>
-                <input asp-for="HorsePower" class="form-control" placeholder="Horsepower...">
-                <span asp-validation-for="HorsePower" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Mileage"></label>
-                <input asp-for="Mileage" class="form-control" placeholder="Mileage...">
-                <span asp-validation-for="Mileage" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="MakeId"></label>
-                <select asp-for="MakeId" class="form-control">
-                    @foreach (var make in Model.Makes)
-                    {
-                        <option value="@make.Id">@make.Make</option>
-                    }
-                </select>
-                <span asp-validation-for="MakeId" class="small text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CategoryId"></label>
-                <select asp-for="CategoryId" class="form-control">
-                    @foreach (var category in Model.Categories)
-                    {
-                        <option value="@category.Id">@category.Name</option>
-                    }
-                </select>
-                <span asp-validation-for="CategoryId" class="small text-danger"></span>
-            </div>
+<style>
+    /* Styles for form */
+    .container {
+        max-width: 800px;
+        margin: 0 auto;
+    }
 
-            <div class="text-center">
-                <input class="btn btn-primary mt-3" type="submit" value="Save" />
-            </div>
-        </form>
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    label {
+        font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea,
+    select {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+    .text-danger {
+        color: red;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Fancy layout */
+    .row-reverse {
+        flex-direction: row-reverse;
+    }
+
+    .form-group-full {
+        width: 100%;
+    }
+
+    .form-group-half {
+        width: 48%;
+        display: inline-block;
+        margin-right: 4%;
+    }
+
+        .form-group-half:last-child {
+            margin-right: 0;
+        }
+
+    .description-section {
+        margin-top: 40px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-12">
+            <form method="post">
+                <div class="form-group">
+                    <label for="Category">Category</label>
+                    <select asp-for="CategoryId" id="CategoryId">
+                        @foreach (var category in Model.Categories)
+                        {
+                            <option value="@category.Id">@category.Name</option>
+                        }
+                    </select>
+                    <span asp-validation-for="CategoryId" class="text-danger small"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Make">Make</label>
+                    <select asp-for="MakeId" id="MakeId">
+                        @foreach (var make in Model.Makes)
+                        {
+                            <option value="@make.Id">@make.Make</option>
+                        }
+                    </select>
+                    <span asp-validation-for="MakeId" class="text-danger small"></span>
+                </div>
+                <div class="form-group">
+                    <label for="Model">Model</label>
+                    <input asp-for="Model" id="Model" placeholder="Enter model...">
+                    <span asp-validation-for="Model" class="text-danger small"></span>
+                </div>
+                <div class="form-group">
+                    <label for="ImageUrl">ImageUrl</label>
+                    <input asp-for="ImageUrl" id="ImageUrl" placeholder="Enter Image Link...">
+                    <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                </div>
+                <div class="row description-section">
+                    <div class="form-group-full">
+                        <label for="Description">Description</label>
+                        <textarea asp-for="Description" id="Description" rows="4" placeholder="Enter description..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-half">
+                        <label for="Price">Price</label>
+                        <input asp-for="Price" id="Price" placeholder="Enter price...">
+                        <span asp-validation-for="Price" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="Year">Year</label>
+                        <input asp-for="Year" id="Year" type="date">
+                        <span asp-validation-for="Year" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group-half">
+                        <label for="Mileage">Mileage</label>
+                        <input asp-for="Mileage" id="Mileage" placeholder="Enter mileage...">
+                        <span asp-validation-for="Mileage" class="text-danger small"></span>
+                    </div>
+                    <div class="form-group-half">
+                        <label for="HorsePower">Horsepower</label>
+                        <input asp-for="HorsePower" id="HorsePower" placeholder="Enter horsepower...">
+                        <span asp-validation-for="HorsePower" class="text-danger small"></span>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary mt-3">Save</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
