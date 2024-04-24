@@ -1,0 +1,23 @@
+﻿@model ICollection<CarSelling.Web.ViewModels.Buy.BuyViewModel>
+
+@{
+    ViewBag.Title = "All Rents";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    @foreach (var buy in Model)
+    {
+        <div class="card mb-3 col-4">
+            <img class="card-img-top" src="@buy.ImageUrl" alt="House Image">
+            <div class="card-body text-center">
+                <h4>@buy.MakeName</h4>
+                <h4>@buy.Model</h4>
+                <h6>Seller: <b>@buy.SellerFullName (@buy.SellerEmail)</b></h6>
+                <h6>Bought By: <b>@buy.BuyerFullName (@buy.BuyerEmail)</b></h6>
+            </div>
+        </div>
+    }
+</div>

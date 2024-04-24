@@ -11,6 +11,7 @@ using CarSelling.Data.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using static CarSelling.Common.AppConstants;
+using CarSelling.Web.Infrastructure.Middleware;
 
 namespace CarSelling.Web.Infrastructure.Extensions
 {
@@ -72,6 +73,11 @@ namespace CarSelling.Web.Infrastructure.Extensions
                 .GetResult();
 
             return app;
+        }
+
+        public static IApplicationBuilder EnableOnlineUsersCheck(this IApplicationBuilder app)
+        {
+            return app.UseMiddleware<OnlineUsersMiddleware>();
         }
     }
 }

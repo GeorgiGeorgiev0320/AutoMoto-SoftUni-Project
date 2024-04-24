@@ -83,6 +83,8 @@ namespace CarSelling.Web
             app.UseAuthentication();
             app.UseAuthorization();
 
+            app.EnableOnlineUsersCheck();
+
             app.SeedAdministrator(DevelopmentAdminEmail);
 
             app.UseEndpoints(endpoints =>

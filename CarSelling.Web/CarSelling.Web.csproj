@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\ViewModels\User\" />
     <Folder Include="Areas\Identity\Pages\Account\" />
   </ItemGroup>
 
