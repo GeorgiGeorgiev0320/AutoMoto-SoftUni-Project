@@ -4,8 +4,10 @@ using CarSelling.Services.Data;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.Infrastructure.ModelBinders;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using static CarSelling.Common.AppConstants;
 
 namespace CarSelling.Web
 {
@@ -33,6 +35,7 @@ namespace CarSelling.Web
                     options.SignIn.RequireConfirmedAccount =
                         builder.Configuration.GetValue<bool>("Identity:SignIn:RequireConfirmedAccount");
                 })
+                .AddRoles<IdentityRole<Guid>>()
                 .AddEntityFrameworkStores<CarSellingDbContext>();
 
             builder.Services.AddApplicationServices(typeof(ICarService));
@@ -66,6 +69,8 @@ namespace CarSelling.Web
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.SeedAdministrator(DevelopmentAdminEmail);
 
             app.UseEndpoints(endpoints =>
             {
