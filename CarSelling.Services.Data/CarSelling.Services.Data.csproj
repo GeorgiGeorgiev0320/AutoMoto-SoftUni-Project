@@ -11,6 +11,7 @@
     <ProjectReference Include="..\CarSelling.Data.Models\CarSelling.Data.Models.csproj" />
     <ProjectReference Include="..\CarSelling.Data\CarSelling.Data.csproj" />
     <ProjectReference Include="..\CarSelling.Services.Data.ViewModels\CarSelling.Services.Data.Models.csproj" />
+    <ProjectReference Include="..\CarSelling.Services.Mapping\CarSelling.Services.Mapping.csproj" />
     <ProjectReference Include="..\CarSelling.Web.ViewModels\CarSelling.Web.ViewModels.csproj" />
   </ItemGroup>
 

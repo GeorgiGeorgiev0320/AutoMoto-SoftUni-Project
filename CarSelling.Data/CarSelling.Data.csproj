@@ -18,6 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\CarSelling.Common\CarSelling.Common.csproj" />
     <ProjectReference Include="..\CarSelling.Data.Models\CarSelling.Data.Models.csproj" />
+    <ProjectReference Include="..\CarSelling.Services.Mapping\CarSelling.Services.Mapping.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,9 +1,12 @@
+using System.Reflection;
 using CarSelling.Data;
 using CarSelling.Data.Models;
 using CarSelling.Services.Data;
 using CarSelling.Services.Data.Interfaces;
+using CarSelling.Services.Mapping;
 using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.Infrastructure.ModelBinders;
+using CarSelling.Web.ViewModels.Home;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -48,6 +51,9 @@ namespace CarSelling.Web
                 });
 
             var app = builder.Build();
+
+            AutoMapperConfig.RegisterMappings(typeof(ErrorViewModel).GetTypeInfo().Assembly);
+
 
             if (app.Environment.IsDevelopment())
             {

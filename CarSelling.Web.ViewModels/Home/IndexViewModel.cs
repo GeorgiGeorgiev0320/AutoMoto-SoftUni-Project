@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿using CarSelling.Services.Mapping;
 namespace CarSelling.Web.ViewModels.Home
 {
-    public class IndexViewModel
+    using Data.Models;
+    public class IndexViewModel: IMapFrom<Car>
     {
         public string Id { get; set; } = null!;
 

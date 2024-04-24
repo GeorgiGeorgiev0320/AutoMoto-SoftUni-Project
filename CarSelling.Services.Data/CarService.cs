@@ -245,15 +245,16 @@ namespace CarSelling.Services.Data
         public async Task<ICollection<IndexViewModel>> LastFewCars()
         {
             ICollection<IndexViewModel> lastCars = await dbContext.Cars
-                .Where(h=>h.IsActive)
+                .Where(h => h.IsActive)
                 .OrderByDescending(h => h.CreatedOn)
                 .Take(3)
-                .Select(c => new IndexViewModel()
+                .Select(c => new IndexViewModel
                 {
                     Id = c.Id.ToString(),
                     Make = c.Make.MakeName,
                     Model = c.Model,
                     ImageUrl = c.ImageUrl
+
                 }).ToArrayAsync();
             return lastCars;
         }
