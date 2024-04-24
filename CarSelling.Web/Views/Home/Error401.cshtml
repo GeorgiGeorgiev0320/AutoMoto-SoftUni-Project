@@ -1,0 +1,51 @@
+﻿@{
+    ViewData["Title"] = "Unauthorized";
+    Layout = "_Layout";
+}
+
+<div class="error-container">
+    <div class="error-wrapper">
+        <h1 class="error-title">401</h1>
+        <p class="error-text">Oops! You are unauthorized to access this page.</p>
+        <button class="btn btn-primary" onclick="window.history.back()">Go Back</button>
+    </div>
+</div>
+
+<style>
+    .error-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .error-wrapper {
+        text-align: center;
+    }
+
+    .error-title {
+        font-size: 6rem;
+        margin-bottom: 20px;
+        color: #ff5252;
+    }
+
+    .error-text {
+        font-size: 1.5rem;
+        margin-bottom: 30px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        border-radius: 5px;
+        background-color: #2196f3;
+        color: white;
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    .btn:hover {
+        background-color: #1976d2;
+    }
+</style>

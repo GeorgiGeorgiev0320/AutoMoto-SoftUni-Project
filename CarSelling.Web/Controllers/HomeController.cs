@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.ViewModels.Home;
+using static CarSelling.Common.AppConstants;
 
 namespace CarSelling.Web.Controllers
 {
@@ -17,6 +18,11 @@ namespace CarSelling.Web.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return this.RedirectToAction("Index", "Home", new { Area = AdminAreaName });
+            }
+
             ICollection<IndexViewModel> cars = await carService.LastFewCars();
 
             return View(cars);
@@ -31,6 +37,10 @@ namespace CarSelling.Web.Controllers
                 return View("Error404");
             }
 
+            if (statusCode == 401)
+            {
+                return View("Error401");
+            }
 
             return View();
         }

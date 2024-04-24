@@ -6,6 +6,8 @@
         public const int DefaultPage = 1;
         public const int DefaultCarsPPage = 3;
 
+
+        public const string AdminAreaName = "Admin";
         public const string AdminRoleName = "Administrator";
         public const string DevelopmentAdminEmail = "admin@automoto.com";
     }

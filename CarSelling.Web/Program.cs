@@ -44,6 +44,12 @@ namespace CarSelling.Web
             builder.Services.AddApplicationServices(typeof(ICarService));
             builder.Services.AddRecaptchaService();
 
+            builder.Services.ConfigureApplicationCookie(cfg =>
+            {
+                cfg.LoginPath = "/User/Login";
+                cfg.AccessDeniedPath = "/Home/Error/401";
+            });
+
             builder.Services.AddControllersWithViews()
                 .AddMvcOptions(options =>
                 {
@@ -81,7 +87,10 @@ namespace CarSelling.Web
 
             app.UseEndpoints(endpoints =>
             {
-
+                endpoints.MapControllerRoute(
+                    name: "areas",
+                    pattern: "/{area:exists}/{controller=Home}/{action=Index}/{id?}"
+                );
                 endpoints.MapControllerRoute(
                     name: "ProtectingUrlRoute",
                     pattern: "/{controller}/{action}/{id}/{information}",
