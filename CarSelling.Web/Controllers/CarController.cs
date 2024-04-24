@@ -132,18 +132,42 @@ namespace CarSelling.Web.Controllers
 
             bool isUserSeller = await sellerService.IsSellerEnabled(userId);
 
-            if (isUserSeller)
+            try
             {
-                string? sellerId = await sellerService.GetSellerIdByUsesId(userId);
+                if (User.IsAdmin())
+                {
+                    string? agentId =
+                        await this.sellerService.GetSellerIdByUsesId(userId);
 
-                allCars.AddRange(await carService.SellerCarsByIdAsync(sellerId!));
+                    allCars.AddRange(await this.carService.SellerCarsByIdAsync(agentId!));
+
+                    
+                    allCars.AddRange(await this.carService.UserBoughtCarsByIdAsync(userId));
+
+                    allCars = allCars
+                        .DistinctBy(h => h.Id)
+                        .ToList();
+                }
+                else if (isUserSeller)
+                {
+                    string? sellerId = await sellerService.GetSellerIdByUsesId(userId);
+
+                    allCars.AddRange(await carService.SellerCarsByIdAsync(sellerId!));
+                }
+                else
+                {
+                    allCars.AddRange(await carService.UserBoughtCarsByIdAsync(userId));
+                }
+
+                return View(allCars);
             }
-            else
+            catch (Exception e)
             {
-                allCars.AddRange(await carService.UserBoughtCarsByIdAsync(userId));
+                Console.WriteLine(e);
+                throw;
             }
 
-            return View(allCars); 
+            
         }
 
         [AllowAnonymous]
@@ -190,7 +214,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
 
-            if (!isSeller)
+            if (!isSeller && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be seller to edit this vehicle!";
                 return RedirectToAction("Become", "Seller");
@@ -200,7 +224,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be owner of the vehicle to edit it!";
 
@@ -248,7 +272,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
 
-            if (!isSeller)
+            if (!isSeller && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be seller to edit this vehicle!";
                 return RedirectToAction("Become", "Seller");
@@ -257,7 +281,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be owner of the vehicle to edit it!";
 
@@ -298,7 +322,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
 
-            if (!isSeller)
+            if (!isSeller && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be seller to delete this vehicle!";
                 return RedirectToAction("Become", "Seller");
@@ -307,7 +331,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be owner of the vehicle to delete it!";
 
@@ -341,7 +365,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
 
-            if (!isSeller)
+            if (!isSeller && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be seller to delete this vehicle!";
                 return RedirectToAction("Become", "Seller");
@@ -350,7 +374,7 @@ namespace CarSelling.Web.Controllers
 
             bool isSellerOwner = await carService.IsSellerIdOwnerByIdAsync(sellerId!, id);
 
-            if (!isSellerOwner)
+            if (!isSellerOwner && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You must be owner of the vehicle to delete it!";
 
@@ -390,7 +414,7 @@ namespace CarSelling.Web.Controllers
             }
 
             bool isSeller = await sellerService.IsSellerEnabled(User.GetId()!);
-            if (isSeller)
+            if (isSeller && !User.IsAdmin())
             {
                 TempData[ErrorMessage] = "You have to be User to buy cars!";
                 return RedirectToAction("Index", "Home");

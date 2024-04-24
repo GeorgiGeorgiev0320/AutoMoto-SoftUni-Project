@@ -117,7 +117,7 @@
                 <div class="card-footer">
                     @if (this.User.Identity?.IsAuthenticated ?? false)
                     {
-                        if (isUserSeller && isSellerOwner)
+                        if ((isUserSeller && isSellerOwner) || User.IsAdmin())
                         {
                             <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id"
                        class="btn btn-warning btn-action">Edit</a>
@@ -126,7 +126,7 @@
                         }
                         <p></p>
 
-                        @if (!Model.IsBought)
+                        @if (!Model.IsBought || User.IsAdmin())
                         {
                             if (!isUserSeller)
                             {
