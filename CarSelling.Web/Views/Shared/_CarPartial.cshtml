@@ -26,16 +26,16 @@
             </h6>
             <h6>(@(Model.IsBought ? "Bought" : "Not Bought"))</h6>
             <br />
-            <a asp-controller="Car" asp-action="Details" asp-route-id="@Model.Id"
+            <a asp-area="" asp-controller="Car" asp-action="Details" asp-route-id="@Model.Id"
                class="btn btn-success">Details</a>
 
             @if (this.User.Identity?.IsAuthenticated ?? false)
             {
                 @if ((isSellerOwner && isUserSeller) || User.IsAdmin())
                 {
-                    <a asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id"
+                    <a asp-area="" asp-controller="Car" asp-action="Edit" asp-route-id="@Model.Id"
                        class="btn btn-warning">Edit</a>
-                    <a asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id"
+                    <a asp-area=""  asp-controller="Car" asp-action="Delete" asp-route-id="@Model.Id"
                        class="btn btn-danger">Delete</a>
                 }
                 <p></p>
@@ -44,7 +44,7 @@
                 {
                     if (!isUserSeller || User.IsAdmin())
                     {
-                        <form class="input-group-sm" asp-controller="Car"
+                        <form class="input-group-sm" asp-area="" asp-controller="Car"
                               asp-action="Buy" asp-route-id="@Model.Id" method="post">
                             <input class="btn btn-primary" type="submit" value="Buy" />
                         </form>
@@ -54,7 +54,7 @@
                 {
                     @if (!isUserSeller && isCarBoughtByUser)
                     {
-                        <form asp-controller="Car" asp-action="Sell"
+                        <form asp-controller="Car" asp-area="" asp-action="Sell"
                               asp-route-id="@Model.Id" method="post">
                             <input class="btn btn-primary" type="submit" value="Sell" />
                         </form>

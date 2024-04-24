@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CarSelling.Data;
+﻿using CarSelling.Data;
 using CarSelling.Data.Models;
 using CarSelling.Services.Data.Interfaces;
 using CarSelling.Web.ViewModels.Seller;
@@ -46,7 +41,9 @@ namespace CarSelling.Services.Data
                 PhoneNumber = model.PhoneNumber,
                 UserId = Guid.Parse(userId)
             };
-
+            var user = await dbContext.Users.FirstOrDefaultAsync(x => x.Id.ToString() == userId);
+            user!.PhoneNumber = model.PhoneNumber;
+            user.PhoneNumberConfirmed = true;
             await dbContext.Sellers.AddAsync(seller);
             await dbContext.SaveChangesAsync();
         }
@@ -70,8 +67,6 @@ namespace CarSelling.Services.Data
             {
                 return false;
             }
-
-
             return seller.CarsForSelling.Any(c => c.Id.ToString() == carId.ToLower());
         }
     }

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using NuGet.Packaging;
 using static CarSelling.Common.NotificationMessagesConstants;
+using static CarSelling.Common.AppConstants;
 
 namespace CarSelling.Web.Controllers
 {
@@ -127,6 +128,11 @@ namespace CarSelling.Web.Controllers
 
         public async Task<IActionResult> Mine()
         {
+
+            if (User.IsInRole(AdminRoleName))
+            {
+                return this.RedirectToAction("Mine", "Car", new { Area = AdminAreaName });
+            }
             ICollection<CarAllViewModel> allCars = new List<CarAllViewModel>();
             string userId = this.User.GetId()!;
 
