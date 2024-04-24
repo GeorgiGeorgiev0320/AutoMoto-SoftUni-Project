@@ -4,6 +4,7 @@ using CarSelling.Web.Infrastructure.Extensions;
 using CarSelling.Web.ViewModels.Car;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using NuGet.Packaging;
 using static CarSelling.Common.NotificationMessagesConstants;
 using static CarSelling.Common.AppConstants;
@@ -18,14 +19,16 @@ namespace CarSelling.Web.Controllers
         private readonly ISellerService sellerService;
         private readonly ICarService carService;
         private readonly IUserService userService;
+        private readonly IMemoryCache memoryCache;
 
-        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService, ICarService carService, IUserService userService)
+        public CarController(ICategoryService categoryService, IMakeService makeService, ISellerService sellerService, ICarService carService, IUserService userService, IMemoryCache memoryCache)
         {
             this.categoryService = categoryService;
             this.makeService = makeService;
             this.sellerService = sellerService;
             this.carService = carService;
             this.userService = userService;
+            this.memoryCache = memoryCache;
         }
 
 
@@ -429,7 +432,6 @@ namespace CarSelling.Web.Controllers
             try
             {
                 await carService.BuyCar(User.GetId()!, id);
-                return RedirectToAction("Mine", "Car");
             }
             catch (Exception )
             {
@@ -437,6 +439,8 @@ namespace CarSelling.Web.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            memoryCache.Remove(BuysCacheKey);
+            return RedirectToAction("Mine", "Car");
         }
 
         [HttpPost]
@@ -467,7 +471,7 @@ namespace CarSelling.Web.Controllers
             try
             {
                 await carService.SellCarAsync(id);
-                return RedirectToAction("Mine", "Car");
+                
             }
             catch (Exception)
             {
@@ -475,6 +479,9 @@ namespace CarSelling.Web.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+
+            memoryCache.Remove(BuysCacheKey);
+            return RedirectToAction("Mine", "Car");
         }
 
     }

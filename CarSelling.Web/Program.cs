@@ -44,6 +44,9 @@ namespace CarSelling.Web
             builder.Services.AddApplicationServices(typeof(ICarService));
             builder.Services.AddRecaptchaService();
 
+            builder.Services.AddMemoryCache();
+            builder.Services.AddResponseCaching();
+
             builder.Services.ConfigureApplicationCookie(cfg =>
             {
                 cfg.LoginPath = "/User/Login";
@@ -79,6 +82,8 @@ namespace CarSelling.Web
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseResponseCaching();
 
             app.UseAuthentication();
             app.UseAuthorization();

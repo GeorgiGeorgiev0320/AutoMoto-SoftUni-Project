@@ -4,7 +4,9 @@ using Griesoft.AspNetCore.ReCaptcha;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using static CarSelling.Common.NotificationMessagesConstants;
+using static CarSelling.Common.AppConstants;
 
 namespace CarSelling.Web.Controllers
 {
@@ -13,12 +15,14 @@ namespace CarSelling.Web.Controllers
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly UserManager<ApplicationUser> userManager;
         private readonly IUserStore<ApplicationUser> userStore;
+        private readonly IMemoryCache memoryCache;
 
         public UserController(SignInManager<ApplicationUser> signInManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager, IMemoryCache memoryCache)
         {
             this.signInManager = signInManager;
             this.userManager = userManager;
+            this.memoryCache = memoryCache;
         }
 
         [HttpGet]
@@ -65,6 +69,7 @@ namespace CarSelling.Web.Controllers
             }
 
             await this.signInManager.SignInAsync(user, false);
+            memoryCache.Remove(UsersCacheKey);
 
             return this.RedirectToAction("Index", "Home");
         }
