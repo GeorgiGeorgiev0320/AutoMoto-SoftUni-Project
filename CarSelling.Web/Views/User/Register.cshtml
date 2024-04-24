@@ -104,12 +104,16 @@
                     <input asp-for="LastName" class="form-control" autocomplete="new-password" aria-required="true" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
-                <recaptcha-v3 form-id="registerForm" action="submit" class="btn btn-lg btn-register">Register</recaptcha-v3>
+                <recaptcha form-id="registerForm" />
+                <div>
+                    <button id="register-submit" type="submit" class="btn btn-lg btn-register">Register</button>
+                </div>
             </form>
         </div>
     </div>
 </div>
 
 @section Scripts {
+    <recaptcha-script />
     <partial name="_ValidationScriptsPartial" />
 }

@@ -30,8 +30,13 @@ namespace CarSelling.Web.Controllers
         [HttpPost]
         [ValidateRecaptcha(Action = nameof(Register),
             ValidationFailedAction = ValidationFailedAction.ContinueRequest)]
-        public async Task<IActionResult> Register(RegisterFormModel model)
+        public async Task<IActionResult> Register(RegisterFormModel model, ValidationResponse recaptchaResponse)
         {
+            if (!recaptchaResponse.Success)
+            {
+                TempData[ErrorMessage] = "ReCaptcha error! Try again!";
+                return this.View(model);
+            }
             if (!ModelState.IsValid)
             {
                 return this.View(model);
@@ -78,8 +83,15 @@ namespace CarSelling.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginFormModel model)
+        [ValidateRecaptcha(Action = nameof(Login),
+            ValidationFailedAction = ValidationFailedAction.ContinueRequest)]
+        public async Task<IActionResult> Login(LoginFormModel model, ValidationResponse recaptchaResponse)
         {
+            if (!recaptchaResponse.Success)
+            {
+                TempData[ErrorMessage] = "ReCaptcha error! Try again!";
+                return this.View(model);
+            }
             if (!ModelState.IsValid)
             {
                 return this.View(model);
