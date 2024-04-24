@@ -104,7 +104,7 @@
                     <input asp-for="LastName" class="form-control" autocomplete="new-password" aria-required="true" />
                     <span asp-validation-for="LastName" class="text-danger"></span>
                 </div>
-                <button id="registerSubmit" type="submit" class="btn btn-lg btn-register">Register</button>
+                <recaptcha-v3 form-id="registerForm" action="submit" class="btn btn-lg btn-register">Register</recaptcha-v3>
             </form>
         </div>
     </div>

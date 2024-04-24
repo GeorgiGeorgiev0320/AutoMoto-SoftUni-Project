@@ -42,6 +42,7 @@ namespace CarSelling.Web
                 .AddEntityFrameworkStores<CarSellingDbContext>();
 
             builder.Services.AddApplicationServices(typeof(ICarService));
+            builder.Services.AddRecaptchaService();
 
             builder.Services.AddControllersWithViews()
                 .AddMvcOptions(options =>
